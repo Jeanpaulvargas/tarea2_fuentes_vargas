@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Dinámico</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .encabezado {
+            color: black;
+        }
+        .encabezado2 {
+            color: black;
+        }
+        .border {
+            border-color: black;
+        }
+        .border2 {
+            border-color: blue;
+        }
+        .bg-green {
+            background-color: limegreen;
+        }
+        .b-green {
+            border: green;
+        }
+        .error {
+            border: 2px solid red;
+        }
+    </style>
+</head>
+<body class="container mt-5">
+    <h1 id="titulo1" class="encabezado">Formulario</h1>
+    <h1 id="titulo2" class="encabezado">Stte Fuentes Vargas</h1>
+    <form action="" id="formPrueba" class="mt-4">
+        <div class="form-group">
+            <label for="">Nombre</label>
+            <input type="text" name="nombre" class="form-control border">
+        </div>
+        <div id="dynamicInputs"></div>
+        <div class="mt-3">
+            <button type="button" id="addInput" class="btn btn-success">Añadir Input</button>
+            <button type="button" id="removeInput" class="btn btn-danger">Eliminar Input</button>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+            <button type="reset" class="btn btn-secondary">Limpiar</button>
+        </div>
+    </form>
+    <div id="contenido" class="mt-5">
+        <h2>Información</h2>
+        <p>Formulario dinámico para añadir inputs y eliminarlos.</p>
+        
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const addInputBtn = document.getElementById('addInput');
+            const removeInputBtn = document.getElementById('removeInput');
+            const form = document.getElementById('formPrueba');
+            const dynamicInputs = document.getElementById('dynamicInputs');
+
+            let inputCount = 0;
+
+            addInputBtn.addEventListener('click', function() {
+                inputCount++;
+                const newInputDiv = document.createElement('div');
+                newInputDiv.id = `inputDiv${inputCount}`;
+                newInputDiv.classList.add('form-group');
+                newInputDiv.innerHTML = `
+                    <label for="dynamicInput${inputCount}">Input ${inputCount}</label>
+                    <input type="text" name="dynamicInput${inputCount}" id="dynamicInput${inputCount}" class="form-control">
+                `;
+                dynamicInputs.appendChild(newInputDiv);
+                console.log(`Input ${inputCount} añadido`);
+            });
+
+            removeInputBtn.addEventListener('click', function() {
+                if (inputCount > 0) {
+                    const lastInputDiv = document.getElementById(`inputDiv${inputCount}`);
+                    if (lastInputDiv) {
+                        dynamicInputs.removeChild(lastInputDiv);
+                        console.log(`Input ${inputCount} eliminado`);
+                        inputCount--;
+                    }
+                }
+            });
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                let isValid = true;
+                const inputs = form.querySelectorAll('input[type="text"]');
+                inputs.forEach(input => {
+                    if (input.value.trim() === '') {
+                        input.classList.add('error');
+                        input.focus();
+                        console.log(`Input vacío detectado: ${input.id}`);
+                        isValid = false;
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+
+                if (isValid) {
+                    console.log('Formulario enviado correctamente');
+                    alert('Formulario enviado correctamente');
+                } else {
+                    console.log('Formulario incompleto');
+                    alert('Por favor, complete todos los campos.');
+                }
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
